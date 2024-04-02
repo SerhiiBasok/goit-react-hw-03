@@ -2,6 +2,7 @@ import React from "react";
 import { Field, Form, Formik, ErrorMessage } from "formik";
 import styles from "../ContactForm/Form.module.css";
 import { nanoid } from "nanoid";
+import * as Yup from "yup";
 
 const ContactForm = ({ onAdd }) => {
   const handleSubmit = (values, { resetForm, isSubmitting }) => {
@@ -12,38 +13,24 @@ const ContactForm = ({ onAdd }) => {
     });
     resetForm();
   };
-
-  const validateName = (value) => {
-    let error;
-    if (!value.trim()) {
-      error = "Name is required";
-    }
-    return error;
-  };
-
-  const validateNumber = (value) => {
-    let error;
-    if (!value || value === "0") {
-      error = "Number is required";
-    }
-    return error;
-  };
+  const formValidate = Yup.object().shape({
+    name: Yup.string().min(3).max(50).required(),
+    number: Yup.number().min(3).required(),
+  });
 
   return (
-    <Formik initialValues={{ name: "", number: "" }} onSubmit={handleSubmit}>
+    <Formik
+      initialValues={{ name: "", number: "" }}
+      onSubmit={handleSubmit}
+      validationSchema={formValidate}
+    >
       {({ isSubmitting }) => (
         <Form className={styles.contactForm}>
           <div className={styles.formGroup}>
             <label htmlFor="name" className={styles.label}>
               Name:
             </label>
-            <Field
-              type="text"
-              id="name"
-              name="name"
-              className={styles.input}
-              validate={validateName}
-            />
+            <Field type="text" id="name" name="name" className={styles.input} />
             <ErrorMessage
               name="name"
               component="div"
@@ -59,7 +46,6 @@ const ContactForm = ({ onAdd }) => {
               id="number"
               name="number"
               className={styles.input}
-              validate={validateNumber}
             />
             <ErrorMessage
               name="number"
