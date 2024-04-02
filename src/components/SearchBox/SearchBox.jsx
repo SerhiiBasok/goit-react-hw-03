@@ -3,7 +3,7 @@ import React from "react";
 const SearchBox = ({ value, onChange }) => {
   return (
     <form>
-      <p>SEARCH CONTACT</p>
+      <h3>Search contact:</h3>
       <input
         type="text"
         value={value}
